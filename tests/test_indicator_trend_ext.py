@@ -36,7 +36,17 @@ class TestTrendExtension(TestCase):
     def test_aroon_ext(self):
         self.data.ta.aroon(append=True)
         self.assertIsInstance(self.data, DataFrame)
-        self.assertEqual(list(self.data.columns[-2:]), ['AROOND_14', 'AROONU_14'])
+        self.assertEqual(list(self.data.columns[-3:]), ['AROOND_14', 'AROONU_14', 'AROONOSC_14'])
+
+    def test_chop_ext(self):
+        self.data.ta.chop(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(self.data.columns[-1], 'CHOP_14_1_100')
+
+    def test_cksp_ext(self):
+        self.data.ta.cksp(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(self.data.columns[-1], 'CKSPs_10_1_9')
 
     def test_decreasing_ext(self):
         self.data.ta.decreasing(append=True)
@@ -67,6 +77,11 @@ class TestTrendExtension(TestCase):
         self.data.ta.long_run(fast, slow, append=True)
         self.assertIsInstance(self.data, DataFrame)
         self.assertEqual(self.data.columns[-1], 'LR_2')
+
+    def test_psar_ext(self):
+        self.data.ta.psar(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(list(self.data.columns[-4:]), ['PSARl_0.02_0.2', 'PSARs_0.02_0.2', 'PSARaf_0.02_0.2', 'PSARr_0.02_0.2'])
 
     def test_qstick_ext(self):
         self.data.ta.qstick(append=True)

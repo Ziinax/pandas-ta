@@ -33,15 +33,25 @@ class TestMomentumExtension(TestCase):
         self.assertIsInstance(self.data, DataFrame)
         self.assertEqual(self.data.columns[-1], 'APO_12_26')
 
+    def test_bias_ext(self):
+        self.data.ta.bias(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(self.data.columns[-1], 'BIAS_SMA_26')
+
     def test_bop_ext(self):
         self.data.ta.bop(append=True)
         self.assertIsInstance(self.data, DataFrame)
         self.assertEqual(self.data.columns[-1], 'BOP')
 
+    def test_brar_ext(self):
+        self.data.ta.brar(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(list(self.data.columns[-2:]), ['AR_26', 'BR_26'])
+
     def test_cci_ext(self):
         self.data.ta.cci(append=True)
         self.assertIsInstance(self.data, DataFrame)
-        self.assertEqual(self.data.columns[-1], 'CCI_20_0.015')
+        self.assertEqual(self.data.columns[-1], 'CCI_14_0.015')
 
     def test_cg_ext(self):
         self.data.ta.cg(append=True)
@@ -63,6 +73,11 @@ class TestMomentumExtension(TestCase):
         self.assertIsInstance(self.data, DataFrame)
         self.assertEqual(self.data.columns[-1], 'FISHERT_5')
 
+    def test_kdj_ext(self):
+        self.data.ta.kdj(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(list(self.data.columns[-3:]), ['K_9_3', 'D_9_3', 'J_9_3'])
+
     def test_kst_ext(self):
         self.data.ta.kst(append=True)
         self.assertIsInstance(self.data, DataFrame)
@@ -82,6 +97,11 @@ class TestMomentumExtension(TestCase):
         self.data.ta.ppo(append=True)
         self.assertIsInstance(self.data, DataFrame)
         self.assertEqual(list(self.data.columns[-3:]), ['PPO_12_26_9', 'PPOH_12_26_9', 'PPOS_12_26_9'])
+
+    def test_psl_ext(self):
+        self.data.ta.psl(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(self.data.columns[-1], 'PSL_12')
 
     def test_roc_ext(self):
         self.data.ta.roc(append=True)
@@ -114,7 +134,7 @@ class TestMomentumExtension(TestCase):
     def test_stoch_ext(self):
         self.data.ta.stoch(append=True)
         self.assertIsInstance(self.data, DataFrame)
-        self.assertEqual(list(self.data.columns[-4:]), ['STOCHF_14', 'STOCHF_3', 'STOCH_5', 'STOCH_3'])
+        self.assertEqual(list(self.data.columns[-4:]), ['STOCHFk_14', 'STOCHFd_3', 'STOCHk_5', 'STOCHd_3'])
 
     def test_trix_ext(self):
         self.data.ta.trix(append=True)

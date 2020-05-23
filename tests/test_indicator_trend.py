@@ -55,7 +55,7 @@ class TestTrend(TestCase):
         self.assertEqual(result.name, 'AMAT_EMA_8_21_2')
 
     def test_aroon(self):
-        result = pandas_ta.aroon(self.close)
+        result = pandas_ta.aroon(self.high, self.low)
         self.assertIsInstance(result, DataFrame)
         self.assertEqual(result.name, 'AROON_14')
 
@@ -75,6 +75,29 @@ class TestTrend(TestCase):
                 self.assertGreater(aroonu_corr, CORRELATION_THRESHOLD)
             except Exception as ex:
                 error_analysis(result.iloc[:,1], CORRELATION, ex, newline=False)
+
+    def test_aroon_osc(self):
+        result = pandas_ta.aroon(self.high, self.low)
+
+        try:
+            expected = tal.AROONOSC(self.high, self.low)
+            pdt.assert_series_equal(result.iloc[:,2], expected)
+        except AssertionError as ae:
+            try:
+                aroond_corr = pandas_ta.utils.df_error_analysis(result.iloc[:,2], expected, col=CORRELATION)
+                self.assertGreater(aroond_corr, CORRELATION_THRESHOLD)
+            except Exception as ex:
+                error_analysis(result.iloc[:,0], CORRELATION, ex)
+
+    def test_chop(self):
+        result = pandas_ta.chop(self.high, self.low, self.close)
+        self.assertIsInstance(result, Series)
+        self.assertEqual(result.name, 'CHOP_14_1_100')
+
+    def test_cksp(self):
+        result = pandas_ta.cksp(self.high, self.low, self.close)
+        self.assertIsInstance(result, DataFrame)
+        self.assertEqual(result.name, 'CKSP_10_1_9')
 
     def test_decreasing(self):
         result = pandas_ta.decreasing(self.close)
@@ -100,6 +123,26 @@ class TestTrend(TestCase):
         result = pandas_ta.long_run(self.close, self.open)
         self.assertIsInstance(result, Series)
         self.assertEqual(result.name, 'LR_2')
+
+    def test_psar(self):
+        result = pandas_ta.psar(self.high, self.low)
+        self.assertIsInstance(result, DataFrame)
+        self.assertEqual(result.name, 'PSAR_0.02_0.2')
+
+        # Combine Long and Short SAR's into one SAR value
+        psar = result[result.columns[:2]].fillna(0)
+        psar = psar[psar.columns[0]] + psar[psar.columns[1]]
+        psar.name = result.name
+
+        try:
+            expected = tal.SAR(self.high, self.low)
+            pdt.assert_series_equal(psar, expected)
+        except AssertionError as ae:
+            try:
+                psar_corr = pandas_ta.utils.df_error_analysis(psar, expected, col=CORRELATION)
+                self.assertGreater(psar_corr, CORRELATION_THRESHOLD)
+            except Exception as ex:
+                error_analysis(psar, CORRELATION, ex)
 
     def test_qstick(self):
         result = pandas_ta.qstick(self.open, self.close)

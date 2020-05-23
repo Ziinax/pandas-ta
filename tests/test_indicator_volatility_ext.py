@@ -20,6 +20,11 @@ class TestVolatilityExtension(TestCase):
     def tearDown(self): pass
 
 
+    def test_aberration_ext(self):
+        self.data.ta.aberration(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(list(self.data.columns[-4:]), ['ABER_ZG_5_15', 'ABER_SG_5_15', 'ABER_XG_5_15', 'ABER_ATR_5_15'])
+
     def test_accbands_ext(self):
         self.data.ta.accbands(append=True)
         self.assertIsInstance(self.data, DataFrame)
@@ -33,7 +38,7 @@ class TestVolatilityExtension(TestCase):
     def test_bbands_ext(self):
         self.data.ta.bbands(append=True)
         self.assertIsInstance(self.data, DataFrame)
-        self.assertEqual(list(self.data.columns[-3:]), ['BBL_20', 'BBM_20', 'BBU_20'])
+        self.assertEqual(list(self.data.columns[-3:]), ['BBL_5', 'BBM_5', 'BBU_5'])
 
     def test_donchian_ext(self):
         self.data.ta.donchian(append=True)
@@ -54,6 +59,11 @@ class TestVolatilityExtension(TestCase):
         self.data.ta.natr(append=True)
         self.assertIsInstance(self.data, DataFrame)
         self.assertEqual(self.data.columns[-1], 'NATR_14')
+
+    def test_pdist_ext(self):
+        self.data.ta.pdist(append=True)
+        self.assertIsInstance(self.data, DataFrame)
+        self.assertEqual(self.data.columns[-1], 'PDIST')
 
     def test_true_range_ext(self):
         self.data.ta.true_range(append=True)

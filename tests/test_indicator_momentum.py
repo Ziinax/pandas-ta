@@ -70,7 +70,7 @@ class TestMomentum(TestCase):
         self.assertEqual(result.name, 'APO_12_26')
 
         try:
-            expected = tal.APO(self.close, 12, 26)
+            expected = tal.APO(self.close)
             pdt.assert_series_equal(result, expected, check_names=False)
         except AssertionError as ae:
             try:
@@ -78,6 +78,11 @@ class TestMomentum(TestCase):
                 self.assertGreater(corr, CORRELATION_THRESHOLD)
             except Exception as ex:
                 error_analysis(result, CORRELATION, ex)
+
+    def test_bias(self):
+        result = pandas_ta.bias(self.close)
+        self.assertIsInstance(result, Series)
+        self.assertEqual(result.name, 'BIAS_SMA_26')
 
     def test_bop(self):
         result = pandas_ta.bop(self.open, self.high, self.low, self.close)
@@ -94,10 +99,15 @@ class TestMomentum(TestCase):
             except Exception as ex:
                 error_analysis(result, CORRELATION, ex)
 
+    def test_brar(self):
+        result = pandas_ta.brar(self.open, self.high, self.low, self.close)
+        self.assertIsInstance(result, DataFrame)
+        self.assertEqual(result.name, 'BRAR_26')
+
     def test_cci(self):
         result = pandas_ta.cci(self.high, self.low, self.close)
         self.assertIsInstance(result, Series)
-        self.assertEqual(result.name, 'CCI_20_0.015')
+        self.assertEqual(result.name, 'CCI_14_0.015')
 
         try:
             expected = tal.CCI(self.high, self.low, self.close)
@@ -138,6 +148,11 @@ class TestMomentum(TestCase):
         result = pandas_ta.fisher(self.high, self.low)
         self.assertIsInstance(result, Series)
         self.assertEqual(result.name, 'FISHERT_5')
+
+    def test_kdj(self):
+        result = pandas_ta.kdj(self.high, self.low, self.close)
+        self.assertIsInstance(result, DataFrame)
+        self.assertEqual(result.name, 'KDJ_9_3')
 
     def test_kst(self):
         result = pandas_ta.kst(self.close)
@@ -202,6 +217,11 @@ class TestMomentum(TestCase):
             except Exception as ex:
                 error_analysis(result['PPO_12_26_9'], CORRELATION, ex)
 
+    def test_psl(self):
+        result = pandas_ta.psl(self.close)
+        self.assertIsInstance(result, Series)
+        self.assertEqual(result.name, 'PSL_12')
+
     def test_roc(self):
         result = pandas_ta.roc(self.close)
         self.assertIsInstance(result, Series)
@@ -253,6 +273,11 @@ class TestMomentum(TestCase):
         self.assertEqual(result.name, 'ANGLEd_1')
 
     def test_stoch(self):
+        result = pandas_ta.stoch(self.high, self.low, self.close, fast_k=14, slow_k=14, slow_d=14)
+        self.assertIsInstance(result, DataFrame)
+        self.assertEqual(result.name, 'STOCH_14_14_14')
+        self.assertEqual(len(result.columns), 4)
+
         result = pandas_ta.stoch(self.high, self.low, self.close)
         self.assertIsInstance(result, DataFrame)
         self.assertEqual(result.name, 'STOCH_14_5_3')

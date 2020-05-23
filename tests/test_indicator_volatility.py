@@ -34,6 +34,11 @@ class TestVolatility(TestCase):
     def tearDown(self): pass
     
 
+    def test_aberration(self):
+        result = pandas_ta.aberration(self.high, self.low, self.close)
+        self.assertIsInstance(result, DataFrame)
+        self.assertEqual(result.name, 'ABER_5_15')
+
     def test_accbands(self):
         result = pandas_ta.accbands(self.high, self.low, self.close)
         self.assertIsInstance(result, DataFrame)
@@ -57,11 +62,11 @@ class TestVolatility(TestCase):
     def test_bbands(self):
         result = pandas_ta.bbands(self.close)
         self.assertIsInstance(result, DataFrame)
-        self.assertEqual(result.name, 'BBANDS_20')
+        self.assertEqual(result.name, 'BBANDS_5')
 
         try:
             expected = tal.BBANDS(self.close)
-            expecteddf = DataFrame({'BBL_20': expected[0], 'BBM_20': expected[1], 'BBU_20': expected[2]})
+            expecteddf = DataFrame({'BBL_5': expected[0], 'BBM_5': expected[1], 'BBU_5': expected[2]})
             pdt.assert_frame_equal(result, expecteddf)
         except AssertionError as ae:
             try:
@@ -116,6 +121,11 @@ class TestVolatility(TestCase):
                 self.assertGreater(corr, CORRELATION_THRESHOLD)
             except Exception as ex:
                 error_analysis(result, CORRELATION, ex)
+
+    def test_pdist(self):
+        result = pandas_ta.pdist(self.open, self.high, self.low, self.close)
+        self.assertIsInstance(result, Series)
+        self.assertEqual(result.name, 'PDIST')
 
     def test_true_range(self):
         result = pandas_ta.true_range(self.high, self.low, self.close)
